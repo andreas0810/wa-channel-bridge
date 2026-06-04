@@ -1,0 +1,23 @@
+{
+  "name": "wa-channel-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Liest Beitraege eines WhatsApp-Kanals und schreibt sie als feed.json (Phase 1, nur Lesen).",
+  "license": "MIT",
+  "type": "commonjs",
+  "bin": {
+    "wa-channel-bridge": "src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "once": "node src/index.js",
+    "watch": "INTERVAL_SEC=300 node src/index.js"
+  },
+  "dependencies": {
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.34.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

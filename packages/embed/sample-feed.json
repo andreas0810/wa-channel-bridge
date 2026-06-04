@@ -1,0 +1,31 @@
+{
+  "channel": {
+    "name": "RV waldmössingen",
+    "description": "Infos und Events rund um den Radfahrerverein 1921 e.V. Waldmössingen",
+    "image": null
+  },
+  "updatedAt": "2026-06-04T18:00:00.000Z",
+  "posts": [
+    {
+      "id": "demo-3",
+      "timestamp": "2026-06-03T16:30:00.000Z",
+      "text": "AOK Radtag am Sonntag, 21.06.2026! Start ab 9 Uhr an der Kastellhalle. Alle Infos: https://rv-waldmoessingen.de/termine",
+      "media": [],
+      "links": ["https://rv-waldmoessingen.de/termine"]
+    },
+    {
+      "id": "demo-2",
+      "timestamp": "2026-05-30T07:15:00.000Z",
+      "text": "Trainingsausfahrt der Ritzelrocker heute 18 Uhr ab Radlerhaus. Tempo locker, alle willkommen.",
+      "media": [],
+      "links": []
+    },
+    {
+      "id": "demo-1",
+      "timestamp": "2026-05-28T19:00:00.000Z",
+      "text": "Save the date: Gravel Race + Schwarzwälder MTB Cup am Samstag, 03.10.2026.",
+      "media": [],
+      "links": []
+    }
+  ]
+}

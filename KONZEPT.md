@@ -1,7 +1,7 @@
 # Technisches Konzept — WhatsApp-Kanal ⇄ Website (auslesen & beschreiben)
 
 > Stand: 2026-06-04
-> Status: Konzept / vor dem ersten Code
+> Status: Phase 1 begonnen (Code in `packages/`), nur Lesen, kein Schreiben
 > Autor: Andreas Trabi
 
 ## 1. Ziel
@@ -262,13 +262,12 @@ in den Kanal, Event-Erinnerungen, RSS/Ergebnisse → Kanal.
 
 ## 8. Roadmap / Meilensteine
 - **M0 — Konzept** (dieses Dokument). ✅
-- **M1 — Spike:** Mit Zweitnummer koppeln, dem eigenen Kanal folgen, via
-  `fetchMessages()` Beiträge als JSON dumpen. Zwei Fragen klären:
-  (1) Geht die Kopplung durch (anders als Baileys)?
-  (2) A1 (eigene whatsapp-web.js-Bridge) oder A2 (WAHA als Unterbau)?
-  → Go/No-Go für Modus A + Wahl der Variante.
-- **M2 — Bridge:** persistenter Dienst, `feed.json` + Medien-Download, Docker.
-- **M3 — Einbindung:** Eleventy-`_data`-Loader + Web-Component `embed.js`.
+- **M1 — Spike:** Variante **A1** gewählt (whatsapp-web.js direkt). Bridge-Code
+  steht (`packages/bridge`, `fetchMessages()` + Medien + `feed.json`). **Offen:**
+  reale Kopplung mit Zweitnummer als Go/No-Go (Kopplung durch? Beiträge da?).
+- **M2 — Bridge:** Dienst + `feed.json` + Medien-Download + Docker. ✅ (Erstfassung)
+- **M3 — Einbindung:** Web-Component `<wa-channel-feed>` (`packages/embed`,
+  im Browser verifiziert) + Eleventy-`_data`-Loader (`packages/eleventy-data`). ✅
 - **M4 — Modus B:** Mini-Admin-Push als regelkonformer Fallback.
 - **M5 — Doku/Community:** Setup-Guide, `CONTRIBUTING`, Issue-Templates,
   Beispiel-Deployment für RV Waldmössingen als Referenz.

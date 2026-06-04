@@ -45,9 +45,14 @@ Die vollständige Analyse und Architektur steht in **[KONZEPT.md](./KONZEPT.md)*
 
 ## Status
 
-**M0 — Konzept.** Vor dem ersten Code. Nächster Schritt: M1-Spike (kann
-`whatsapp-web.js` mit einer Zweitnummer koppeln und Kanal-Beiträge lesen, wo
-Baileys blockiert wurde?). Details und Roadmap in [KONZEPT.md](./KONZEPT.md).
+**Phase 1 begonnen (M1/M3).** Kein Schreiben. Vorhanden und getestet:
+- [`packages/bridge`](./packages/bridge) — liest Kanal → `feed.json` (whatsapp-web.js, A1). Bereit zum Koppeln mit einer Zweitnummer.
+- [`packages/embed`](./packages/embed) — `<wa-channel-feed>` zeigt den Feed; im Browser gegen `sample-feed.json` verifiziert ([Screenshot](./docs/demo-screenshot.png)).
+- [`packages/eleventy-data`](./packages/eleventy-data) — Build-Zeit-Loader für 11ty.
+
+**Offener Go/No-Go-Punkt:** koppelt eine **Zweitnummer** durch und liefert
+`fetchMessages()` echte Beiträge (dort, wo Baileys blockiert wurde)? Das erfordert
+eine reale Nummer + Telefon. Details/Roadmap in [KONZEPT.md](./KONZEPT.md).
 
 ## Mitmachen
 
