@@ -6,15 +6,27 @@
 
 ## 1. Ziel
 
-Vereine (und kleine Organisationen) nutzen **WhatsApp-Kanäle** (Channels), um
-Mitglieder und Interessierte schnell mit Infos und Events zu erreichen. Diese
-Beiträge sollen **zusätzlich automatisch auf der Homepage** erscheinen, damit
-auch Nicht-WhatsApp-Nutzer und Suchmaschinen sie sehen.
+**Beiträge eines öffentlichen WhatsApp-Kanals (Channel) automatisiert abgreifen
+und auf beliebigen externen Websites darstellen.**
 
-Es gibt aktuell **keine fertige, freie Schnittstelle/API/Crawler**, die einen
-öffentlichen WhatsApp-Kanal ausliest und in eine Website einbettet. Genau diese
-Lücke soll dieses Open-Source-Projekt schließen — als nachnutzbares Werkzeug für
-Webseitenbetreiber, idealerweise als Community-Projekt.
+Vereine und Organisationen nutzen WhatsApp-Kanäle, um Mitglieder und
+Interessierte schnell mit Infos und Events zu erreichen. Diese Beiträge sollen
+**fortlaufend, ohne manuelles Kopieren, auf einer oder mehreren externen
+Websites** erscheinen — sichtbar auch für Nicht-WhatsApp-Nutzer und
+Suchmaschinen.
+
+Anforderungen, die das Ziel konkretisieren:
+- **Automatisiert:** neue Kanal-Beiträge werden ohne manuelles Zutun erfasst und
+  veröffentlicht.
+- **Extern/wiederverwendbar:** die Ausgabe ist ein neutrales Format (`feed.json`)
+  plus Einbettung, nutzbar auf beliebigen Seiten (eigene Homepage, WordPress,
+  statische Sites) und über Domains hinweg (CORS).
+- **Selbst-gehostet & frei:** keine erzwungene, kostenpflichtige
+  Drittanbieter-Abhängigkeit.
+
+Es gibt aktuell **keine fertige, freie Schnittstelle/API/Crawler**, die das
+leistet. Genau diese Lücke soll dieses Open-Source-Projekt schließen — als
+nachnutzbares Werkzeug für Webseitenbetreiber, als Community-Projekt.
 
 Konkreter Auslöser: RV Waldmössingen
 (`https://whatsapp.com/channel/0029Vb82qq1G8l5DBLhALK0m`) soll seine

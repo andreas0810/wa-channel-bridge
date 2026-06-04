@@ -1,10 +1,17 @@
-# WhatsApp-Kanal → Homepage
+# WhatsApp-Kanal → externe Websites
 
-Ein freies Werkzeug für **Webseitenbetreiber und Vereine**, um die Beiträge eines
-öffentlichen **WhatsApp-Kanals** automatisch auf der eigenen Homepage anzuzeigen.
+**Ziel:** Beiträge eines öffentlichen **WhatsApp-Kanals automatisiert abgreifen
+und auf beliebigen externen Websites darstellen.**
 
-> Mitglieder posten wie gewohnt in WhatsApp — die Infos erscheinen zusätzlich auf
-> der Website, sichtbar auch für Nicht-WhatsApp-Nutzer und Suchmaschinen.
+Ein freies, selbst-gehostetes Werkzeug für **Webseitenbetreiber, Vereine und
+Organisationen**: Der Kanal wird automatisch ausgelesen, in ein neutrales Format
+(`feed.json`) überführt und kann per Embed-Widget oder Build-Loader in jede
+beliebige Seite (eigene Homepage, WordPress, statische Sites …) eingebunden
+werden — ohne manuelles Kopieren, fortlaufend aktuell.
+
+> Mitglieder/Redaktion posten wie gewohnt in WhatsApp — die Infos erscheinen
+> automatisch auch auf der/den Website(s), sichtbar für Nicht-WhatsApp-Nutzer und
+> Suchmaschinen.
 
 ## Warum?
 
