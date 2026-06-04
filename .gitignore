@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+package-lock.json.bak
+
+# WhatsApp-Session / Auth (NIEMALS committen)
+.wwebjs_auth/
+.wwebjs_cache/
+session*/
+auth_info*/
+
+# Generierte Feed-Daten & Medien
+feed.json
+media/
+*.local.json
+
+# Secrets / Env
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# OS / Editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
