@@ -1,4 +1,4 @@
-# Technisches Konzept — WhatsApp-Kanal auf der Vereins-Homepage
+# Technisches Konzept — WhatsApp-Kanal ⇄ Website (auslesen & beschreiben)
 
 > Stand: 2026-06-04
 > Status: Konzept / vor dem ersten Code
@@ -6,31 +6,52 @@
 
 ## 1. Ziel
 
-**Beiträge eines öffentlichen WhatsApp-Kanals (Channel) automatisiert abgreifen
-und auf beliebigen externen Websites darstellen.**
+**Einen WhatsApp-Kanal automatisiert auslesen *und* beschreiben — und ihn mit
+beliebigen externen Websites verbinden. Kanal ⇄ Website, „einmal posten, überall
+sichtbar".**
 
 Vereine und Organisationen nutzen WhatsApp-Kanäle, um Mitglieder und
-Interessierte schnell mit Infos und Events zu erreichen. Diese Beiträge sollen
-**fortlaufend, ohne manuelles Kopieren, auf einer oder mehreren externen
-Websites** erscheinen — sichtbar auch für Nicht-WhatsApp-Nutzer und
-Suchmaschinen.
+Interessierte schnell zu erreichen. Das Projekt schließt den **kompletten Kreis**
+um einen Kanal:
+
+1. **Lesen → Anzeigen** (Phase 1, robust): Kanal-Beiträge fortlaufend abgreifen,
+   in ein neutrales `feed.json` überführen und per Embed/Build-Loader auf einer
+   oder mehreren externen Websites darstellen — sichtbar auch für
+   Nicht-WhatsApp-Nutzer und Suchmaschinen.
+2. **Schreiben → Posten** (Phase 2, experimentell): Beiträge **aus der
+   Website/einem CMS/einer Automation heraus** in den Kanal veröffentlichen
+   (z. B. News-Eintrag, Event-Erinnerung, Renn-Ergebnis) — ohne die WhatsApp-App
+   zu öffnen.
 
 Anforderungen, die das Ziel konkretisieren:
-- **Automatisiert:** neue Kanal-Beiträge werden ohne manuelles Zutun erfasst und
-  veröffentlicht.
-- **Extern/wiederverwendbar:** die Ausgabe ist ein neutrales Format (`feed.json`)
-  plus Einbettung, nutzbar auf beliebigen Seiten (eigene Homepage, WordPress,
-  statische Sites) und über Domains hinweg (CORS).
+- **Automatisiert & bidirektional:** beide Richtungen ohne manuelles Kopieren.
+- **Extern/wiederverwendbar:** Ausgabe als neutrales `feed.json` + Einbettung,
+  nutzbar auf beliebigen Seiten (eigene Homepage, WordPress, statische Sites),
+  über Domains hinweg (CORS).
 - **Selbst-gehostet & frei:** keine erzwungene, kostenpflichtige
   Drittanbieter-Abhängigkeit.
-
-Es gibt aktuell **keine fertige, freie Schnittstelle/API/Crawler**, die das
-leistet. Genau diese Lücke soll dieses Open-Source-Projekt schließen — als
-nachnutzbares Werkzeug für Webseitenbetreiber, als Community-Projekt.
 
 Konkreter Auslöser: RV Waldmössingen
 (`https://whatsapp.com/channel/0029Vb82qq1G8l5DBLhALK0m`) soll seine
 Kanal-Beiträge auf `rv-waldmoessingen.de` anzeigen.
+
+## 1a. Alleinstellung — was es schon gibt und die Lücke (Recherche 2026-06-04)
+
+Die Einzelteile existieren, die **freie, selbst-gehostete, bidirektionale
+Komplettlösung für Webseitenbetreiber** jedoch nicht:
+
+| Vorhandenes | Kann | Lücke |
+|---|---|---|
+| **whapi.cloud** | Kanal lesen + posten (two-way) | kommerziell (~33 €/Mo), nur API (Web-Integration baust du selbst), externer SaaS (DSGVO) |
+| **SociableKit** u. ä. | WhatsApp-*Status* einbetten | Status ≠ Kanal, kommerziell, kein Posten |
+| **Elfsight / WidgetWhats / WP Social Ninja / OpenWidget** | „Chat-mit-uns"-Button | reine Kontakt-Buttons, kein Kanal-Feed, kein Lesen/Schreiben |
+| **WAHA, whatsapp-web.js** | Kanal lesen + posten (Bausteine) | nur Infrastruktur, keine Website-Anzeige/Workflow, Channel-Funktionen teils buggy |
+
+**Das Neue an diesem Projekt:** die Kombination aus *frei + selbst-gehostet +
+bidirektional (lesen UND schreiben) + fertige Website-Einbettung + Zielgruppe
+Vereine/Webseitenbetreiber* — als ein Paket. Diese Kombination existiert als
+Open-Source-Produkt bislang nicht. Wir erfinden keine neue WhatsApp-Fähigkeit,
+sondern füllen eine reale **Produkt-Lücke**.
 
 ## 2. Begriffsklärung (wichtig!)
 
@@ -116,9 +137,8 @@ erneut probiert werden.
 
 ## 4. Lösungsstrategie
 
-Weil das Auslesen von WhatsApp seitens Meta aktiv erschwert wird, setzt das
-Projekt auf **zwei Betriebsarten**. Betreiber wählen je nach Risiko-/Komfort-
-Wunsch.
+Weil WhatsApp seitens Meta aktiv erschwert wird, setzt das Projekt auf **drei
+Betriebsarten**. Betreiber wählen je nach Richtung, Risiko und Komfort.
 
 ### Modus A (empfohlen, primär): Kanal-Spiegel
 „WhatsApp bleibt die Quelle." Ein selbst-gehosteter Dienst folgt dem Kanal mit
@@ -146,9 +166,27 @@ in WhatsApp geteilt werden kann (Deep-Link/Copy).
 - **Contra:** Workflow ändert sich (erst Formular, dann WhatsApp), nicht „nur
   WhatsApp".
 
-> Empfehlung: Modus A als Kernfeature umsetzen, Modus B als immer funktionierende
-> Rückfallebene mitliefern. So ist das Projekt auch dann nützlich, wenn WhatsApp
-> den Spiegel-Weg dichtmacht.
+### Modus C (experimentell, Phase 2): Website → Kanal posten („beschreiben")
+Die zweite Richtung des Kreises. Beiträge werden **aus der Website / einem CMS /
+einer Automation** in den Kanal veröffentlicht — über denselben
+gekoppelten Client (`sendMessage` an die Newsletter-JID via whatsapp-web.js bzw.
+WAHA-Channel-Endpunkt). Anwendungsfälle: News-Eintrag der Homepage spiegelt sich
+in den Kanal, Event-Erinnerungen, RSS/Ergebnisse → Kanal.
+
+- **Pro:** Echte Bidirektionalität, „einmal posten, überall sichtbar"; der
+  Verein pflegt nur eine Quelle.
+- **Contra/Risiko:** **Fragilster Teil.** Posten in Kanäle ist über inoffizielle
+  Clients buggy (WAHA-Issue: Senden an `@newsletter` → 500/verworfen;
+  Medien-Senden fällt aus — **Text** am stabilsten). Aktives automatisiertes
+  Posten erhöht das **Sperr-Risiko** gegenüber reinem Lesen. Nur **eigene**
+  Kanäle (man muss Admin sein). → Erst nach stabilem Modus A, mit Zweitnummer,
+  zunächst nur Text, mit manueller Freigabe.
+
+> Empfehlung & Phasen: **Phase 1** = Modus A (lesen+anzeigen) als robustes
+> Kernfeature, plus Modus B als immer funktionierende Rückfallebene. **Phase 2** =
+> Modus C (posten) als experimentelle Erweiterung, sobald Phase 1 stabil läuft.
+> So ist das Projekt sofort nützlich und wird zur bidirektionalen Komplettlösung,
+> ohne am fragilsten Teil zu scheitern.
 
 ## 5. Architektur (Modus A)
 
@@ -234,6 +272,9 @@ in WhatsApp geteilt werden kann (Deep-Link/Copy).
 - **M4 — Modus B:** Mini-Admin-Push als regelkonformer Fallback.
 - **M5 — Doku/Community:** Setup-Guide, `CONTRIBUTING`, Issue-Templates,
   Beispiel-Deployment für RV Waldmössingen als Referenz.
+- **M6 — Modus C (Phase 2):** Posten Website → Kanal, zunächst nur Text, mit
+  manueller Freigabe. Spike: Text via `sendMessage` an Newsletter-JID. Erst nach
+  stabilem M2.
 
 ## 9. Repo-Struktur (geplant)
 ```

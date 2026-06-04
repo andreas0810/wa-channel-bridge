@@ -1,13 +1,21 @@
-# WhatsApp-Kanal → externe Websites
+# WhatsApp-Kanal ⇄ Website
 
-**Ziel:** Beiträge eines öffentlichen **WhatsApp-Kanals automatisiert abgreifen
-und auf beliebigen externen Websites darstellen.**
+**Ziel:** Einen öffentlichen **WhatsApp-Kanal automatisiert auslesen *und*
+beschreiben** — und ihn mit beliebigen externen Websites verbinden.
+„Einmal posten, überall sichtbar."
 
 Ein freies, selbst-gehostetes Werkzeug für **Webseitenbetreiber, Vereine und
-Organisationen**: Der Kanal wird automatisch ausgelesen, in ein neutrales Format
-(`feed.json`) überführt und kann per Embed-Widget oder Build-Loader in jede
-beliebige Seite (eigene Homepage, WordPress, statische Sites …) eingebunden
-werden — ohne manuelles Kopieren, fortlaufend aktuell.
+Organisationen**:
+- **Lesen → Anzeigen:** Kanal wird automatisch ausgelesen, in ein neutrales
+  Format (`feed.json`) überführt und per Embed-Widget oder Build-Loader in jede
+  Seite (Homepage, WordPress, statische Sites …) eingebunden — fortlaufend.
+- **Schreiben → Posten** (Phase 2): Beiträge aus Website/CMS/Automation in den
+  Kanal veröffentlichen, ohne die WhatsApp-App zu öffnen.
+
+**Warum neu?** Die Einzelteile existieren, die *freie, selbst-gehostete,
+bidirektionale* Komplettlösung für Webseitenbetreiber nicht — die einzige
+vergleichbare (whapi.cloud) ist kommerziell, API-only und extern. Details in
+[KONZEPT.md §1a](./KONZEPT.md).
 
 > Mitglieder/Redaktion posten wie gewohnt in WhatsApp — die Infos erscheinen
 > automatisch auch auf der/den Website(s), sichtbar für Nicht-WhatsApp-Nutzer und
@@ -32,6 +40,8 @@ Die vollständige Analyse und Architektur steht in **[KONZEPT.md](./KONZEPT.md)*
   Seite.
 - **Modus B — Push-Fallback (robust):** Ein kleines Admin-Formular als regel-
   konforme Rückfallebene, falls der Spiegel-Weg ausfällt.
+- **Modus C — Posten (experimentell, Phase 2):** Beiträge aus Website/CMS in den
+  Kanal veröffentlichen (`sendMessage`/WAHA). Fragilster Teil, erst nach Phase 1.
 
 ## Status
 
