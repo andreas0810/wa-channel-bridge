@@ -85,11 +85,34 @@ erneut probiert werden.
   Baileys.
 - Damit ist die Wahrscheinlichkeit hoch, dass die Kopplung **nicht** wie bei
   Baileys blockiert wird.
-- **Einschränkung/Risiko:** Die Kanal-/Newsletter-Unterstützung in
-  whatsapp-web.js ist neuer und kann instabil sein; UI-Änderungen von WhatsApp
-  können den Selektor-basierten Zugriff brechen. Jede inoffizielle Automation
-  verstößt gegen die WhatsApp-Nutzungsbedingungen und kann zur **Sperrung der
-  Nummer** führen → **dedizierte Zweitnummer** verwenden.
+- **Lesen von Kanälen ist vorgesehen:** Die Library hat eine `Channel`-Klasse mit
+  `fetchMessages(searchOptions)` — „Loads channel messages, sorted from earliest
+  to latest" (mit Limit/Sender-Filter) sowie Properties wie `lastMessage`,
+  `name`, `description`, `timestamp`, `unreadCount`
+  (Quelle: `docs.wwebjs.dev/Channel.html`).
+- **Lücke:** Es gibt **keine** Library-Methode, um einem Kanal per Invite-Link zu
+  **folgen**. Workaround: dem eigenen Kanal **einmalig manuell** auf dem
+  gekoppelten Telefon folgen → danach liefert `fetchMessages()` die Beiträge.
+- **Einschränkung/Risiko:** Die Kanal-/Newsletter-Unterstützung ist neuer und
+  kann instabil sein (offene Issues zu Channels, z. B. 500-Fehler beim
+  *Senden*); UI-Änderungen von WhatsApp können den Zugriff brechen. Jede
+  inoffizielle Automation verstößt gegen die WhatsApp-Nutzungsbedingungen und
+  kann zur **Sperrung der Nummer** führen → **dedizierte Zweitnummer** verwenden.
+
+### 3.6 WAHA — WhatsApp HTTP API (selbst-gehostet) — mögliche Abkürzung
+- Open-Source-Projekt `devlikeapro/waha`: kapselt WhatsApp Web als
+  **HTTP-REST-API** in **Docker**, QR-Kopplung, drei Engines (WEBJS = Browser,
+  NOWEB = Node/WebSocket, GOWS = Go). Fährt eine echte WhatsApp-Web-Instanz, um
+  Blocks zu vermeiden. Channel-/Newsletter-Support ist enthalten.
+- **Vorteil:** Spart den Aufbau einer eigenen Bridge — das Projekt müsste dann
+  nur den **Feed-Konverter** (REST → `feed.json`) und das **Embed/Widget** bauen.
+- **Zu prüfen (M1):** (a) Lizenz/Funktionsumfang — WAHA ist Open-Core, einzelne
+  Channel-Funktionen können „WAHA Plus" (kostenpflichtig) sein; (b) ob das
+  *Lesen* von Kanal-Beiträgen in der freien Core-Variante geht; (c) Stabilität
+  der Channel-Endpunkte (offene Issues vorhanden).
+- **Hinweis Landschaft:** Vorhandene „whatsapp-scraper"-Projekte auf GitHub
+  (Selenium-basiert) zielen auf **Chats**, nicht auf **Kanäle** — für unser Ziel
+  also nicht direkt nutzbar, bestätigen aber die Lücke.
 
 ## 4. Lösungsstrategie
 
@@ -97,10 +120,15 @@ Weil das Auslesen von WhatsApp seitens Meta aktiv erschwert wird, setzt das
 Projekt auf **zwei Betriebsarten**. Betreiber wählen je nach Risiko-/Komfort-
 Wunsch.
 
-### Modus A (empfohlen, primär): Kanal-Spiegel via whatsapp-web.js
-„WhatsApp bleibt die Quelle." Ein selbst-gehosteter Bridge-Dienst folgt dem
-Kanal mit einer dedizierten Nummer, liest neue Beiträge und stellt sie als
-JSON-Feed bereit. Die Website konsumiert den Feed.
+### Modus A (empfohlen, primär): Kanal-Spiegel
+„WhatsApp bleibt die Quelle." Ein selbst-gehosteter Dienst folgt dem Kanal mit
+einer dedizierten Nummer, liest neue Beiträge (`fetchMessages()`) und stellt sie
+als JSON-Feed bereit. Die Website konsumiert den Feed.
+
+Zwei Umsetzungsvarianten (M1 entscheidet):
+- **A1 — eigene Bridge** direkt auf `whatsapp-web.js` (volle Kontrolle, schlank).
+- **A2 — auf WAHA aufsetzen** (Docker-REST-API als Unterbau, wir bauen nur
+  Feed-Konverter + Embed). Schneller, falls Channel-Lesen in WAHA Core läuft.
 
 - **Pro:** Mitglieder posten wie gewohnt in WhatsApp; Homepage aktualisiert sich
   automatisch. Kostenlos, selbst gehostet, datensparsam.
@@ -196,9 +224,11 @@ in WhatsApp geteilt werden kann (Deep-Link/Copy).
 
 ## 8. Roadmap / Meilensteine
 - **M0 — Konzept** (dieses Dokument). ✅
-- **M1 — Spike:** whatsapp-web.js mit Zweitnummer koppeln, Kanal abonnieren,
-  einen Beitrag als JSON dumpen. *Geht die Kopplung durch (anders als Baileys)?*
-  → Go/No-Go-Entscheidung für Modus A.
+- **M1 — Spike:** Mit Zweitnummer koppeln, dem eigenen Kanal folgen, via
+  `fetchMessages()` Beiträge als JSON dumpen. Zwei Fragen klären:
+  (1) Geht die Kopplung durch (anders als Baileys)?
+  (2) A1 (eigene whatsapp-web.js-Bridge) oder A2 (WAHA als Unterbau)?
+  → Go/No-Go für Modus A + Wahl der Variante.
 - **M2 — Bridge:** persistenter Dienst, `feed.json` + Medien-Download, Docker.
 - **M3 — Einbindung:** Eleventy-`_data`-Loader + Web-Component `embed.js`.
 - **M4 — Modus B:** Mini-Admin-Push als regelkonformer Fallback.
@@ -223,7 +253,18 @@ in WhatsApp geteilt werden kann (Deep-Link/Copy).
 
 ## 10. Offene Fragen
 1. Geht die whatsapp-web.js-Kopplung mit einer **Zweitnummer** durch? (M1-Spike)
-2. Liest whatsapp-web.js **Kanal-Beiträge** zuverlässig (nicht nur Chats)?
-3. Statischer Sync oder kleiner API-Server für die Feed-Ausgabe?
-4. Welche Always-on-Hardware steht bereit (Pi / vorhandener Mac-Dienst / VPS)?
-```
+2. Liest `fetchMessages()` **Kanal-Beiträge** zuverlässig (nicht nur Chats)?
+3. A1 (eigene Bridge) oder A2 (WAHA als Unterbau)? Channel-Lesen in WAHA Core?
+4. Statischer Sync oder kleiner API-Server für die Feed-Ausgabe?
+5. Welche Always-on-Hardware steht bereit (Pi / vorhandener Mac-Dienst / VPS)?
+
+## 11. Quellen (Recherche 2026-06-04)
+- whatsapp-web.js — `Channel`-Klasse, `fetchMessages()`:
+  https://docs.wwebjs.dev/Channel.html
+- whatsapp-web.js — Repo: https://github.com/pedroslopez/whatsapp-web.js
+- WAHA (WhatsApp HTTP API, selbst-gehostet, Docker, Channel-Support):
+  https://waha.devlike.pro/ · https://github.com/devlikeapro/waha
+- WAHA Issue zu Channel-Bugs (Senden, WEBJS-Engine):
+  https://github.com/devlikeapro/waha/issues/1863
+- Bestehende GitHub-„whatsapp-scraper" (Selenium, nur Chats — nicht Kanäle):
+  https://github.com/topics/whatsapp-scraper
